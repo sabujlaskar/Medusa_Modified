@@ -24,15 +24,16 @@ def _read_prompts_jsonl(path: str):
             # expect {"prompt": "...", "id": "..."}; id optional
             yield {"id": obj.get("id"), "prompt": obj["prompt"]}
 
-def _consume_outputs(outputs: Union[str, Iterable[str]]) -> str:
-    """Medusa's medusa_generate may yield text chunks. Join them safely."""
-    if isinstance(outputs, str):
-        return outputs
-    try:
-        return "".join(list(outputs))
-    except TypeError:
-        # If it's not an iterable of strings, just convert to str
-        return str(outputs)
+def collect_text(gen):
+    parts = []
+    for ch in gen:
+        if isinstance(ch, dict):
+            t = ch.get("text") or (ch.get("delta", {}) or {}).get("content") or ch.get("output")
+            if isinstance(t, str):
+                parts.append(t)
+        elif isinstance(ch, str):
+            parts.append(ch)
+    return "".join(parts)
 
 def main():
     ap = argparse.ArgumentParser("Medusa batch generator (non-interactive)")
@@ -100,17 +101,7 @@ def main():
                 temperature=args.temperature,
                 max_steps=args.max_steps,
             )
-
-            parts = []
-            for ch in out_chunks:
-                if isinstance(ch, dict):
-                    t = ch.get("text") or (ch.get("delta", {}) or {}).get("content") or ch.get("output")
-                    if isinstance(t, str):
-                        parts.append(t)
-                elif isinstance(ch, str):
-                    parts.append(ch)
-
-            text = "".join(parts).strip()
+            text = collect_text(out_chunks).strip()
         except KeyboardInterrupt:
             print("\n[Interrupted] stopping at item:", pid, file=sys.stderr)
             break
