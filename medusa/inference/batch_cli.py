@@ -101,10 +101,16 @@ def main():
                 max_steps=args.max_steps,
             )
 
-            first = next(iter(out_chunks))
-            print("TYPE:", type(first), "VALUE SAMPLE:", (first if isinstance(first, str) else str(first)[:200]))
+            parts = []
+            for ch in out_chunks:
+                if isinstance(ch, dict):
+                    t = ch.get("text") or (ch.get("delta", {}) or {}).get("content") or ch.get("output")
+                    if isinstance(t, str):
+                        parts.append(t)
+                elif isinstance(ch, str):
+                    parts.append(ch)
 
-            text = "".join(out_chunks).strip()
+            text = "".join(parts).strip()
         except KeyboardInterrupt:
             print("\n[Interrupted] stopping at item:", pid, file=sys.stderr)
             break
