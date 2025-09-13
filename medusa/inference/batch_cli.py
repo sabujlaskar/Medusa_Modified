@@ -100,6 +100,10 @@ def main():
                 temperature=args.temperature,
                 max_steps=args.max_steps,
             )
+
+            first = next(iter(out_chunks))
+            print("TYPE:", type(first), "VALUE SAMPLE:", (first if isinstance(first, str) else str(first)[:200]))
+
             text = "".join(out_chunks).strip()
         except KeyboardInterrupt:
             print("\n[Interrupted] stopping at item:", pid, file=sys.stderr)
