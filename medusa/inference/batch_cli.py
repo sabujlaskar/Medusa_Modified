@@ -100,7 +100,7 @@ def main():
                 temperature=args.temperature,
                 max_steps=args.max_steps,
             )
-            text = _consume_outputs(out_chunks).strip()
+            text = "".join(out_chunks).strip()
         except KeyboardInterrupt:
             print("\n[Interrupted] stopping at item:", pid, file=sys.stderr)
             break
