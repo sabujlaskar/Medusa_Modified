@@ -7,4 +7,4 @@ pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu12
 pip install "transformers>=4.34,<5.0" accelerate sentencepiece "protobuf>=3.20,<5.0" fschat
 
 
-srun -p --nodes=1 --ntasks-per-node=1 --cpus-per-task=16 --gres=gpu:a100:1 --mem=60G --time=04:00:00 --pty bash -i
+srun -p --nodes=1 --ntasks-per-node=1 --cpus-per-task=32 --gres=gpu:a100:1 --mem=80G --time=04:00:00 --pty bash -i

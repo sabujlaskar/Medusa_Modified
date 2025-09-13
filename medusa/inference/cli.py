@@ -183,6 +183,7 @@ def main(args):
 
 
 if __name__ == "__main__":
+    print("Yes we are here")
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", type=str, required=True, help="Model name or path.")
     parser.add_argument(
@@ -223,4 +224,5 @@ if __name__ == "__main__":
         help="Print useful debug information (e.g., prompts)",
     )
     args = parser.parse_args()
+    print("Argument parsing is done")
     main(args)
