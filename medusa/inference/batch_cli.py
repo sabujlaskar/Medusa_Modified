@@ -36,11 +36,11 @@ def _consume_outputs(outputs: Union[str, Iterable[str]]) -> str:
 
 def main():
     ap = argparse.ArgumentParser("Medusa batch generator (non-interactive)")
-    parser.add_argument("--model", type=str, required=True, help="Model name or path.")
+    ap.add_argument("--model", type=str, required=True, help="Model name or path.")
     ap.add_argument("--input-file", required=True, help="Text file or JSONL of prompts")
     ap.add_argument("--output-file", default=None, help="Write JSONL with fields: id, prompt, output")
-    parser.add_argument("--load-in-8bit", action="store_true", help="Use 8-bit quantization")
-    parser.add_argument("--load-in-4bit", action="store_true", help="Use 4-bit quantization")
+    ap.add_argument("--load-in-8bit", action="store_true", help="Use 8-bit quantization")
+    ap.add_argument("--load-in-4bit", action="store_true", help="Use 4-bit quantization")
     ap.add_argument("--temperature", type=float, default=0.7)
     ap.add_argument("--max-steps", type=int, default=512, help="Max generation steps (tokens) for Medusa")
     ap.add_argument("--conv-template", type=str, default=None, help="Override FastChat conversation template name")
