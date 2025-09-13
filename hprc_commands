@@ -1,10 +1,13 @@
-srun --nodes=1 --ntasks-per-node=4 --mem=30G --gres=gpu:a100:1 --time=04:00:00 --pty bash -i
-module load WebProxy GCCcore/12.2.0 Python/3.10.8 CUDA/12.9.0
+srun -p gpu-a100 --nodes=1 --ntasks-per-node=1 --cpus-per-task=32 --gres=gpu:a100:1 --mem=80G --time=04:00:00 --pty bash -i
+module load WebProxy GCCcore/12.2.0 Python/3.10.8
 source venv/bin/activate
+export TMPDIR="${SLURM_TMPDIR:-/tmp}"
+export PYTHONPYCACHEPREFIX="$TMPDIR/__pycache__"
+export XDG_CACHE_HOME="$TMPDIR/.cache"
+export TORCH_HOME="$TMPDIR/torch"
+export HF_HOME="$TMPDIR/huggingface"
+export PIP_CACHE_DIR="$SCRATCH/.cache/pip"
 export PIP_CACHE_DIR=$SCRATCH/.cache/pip
 python -m pip install -U pip setuptools wheel
-pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu129
+pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu126
 pip install "transformers>=4.34,<5.0" accelerate sentencepiece "protobuf>=3.20,<5.0" fschat
-
-
-srun -p --nodes=1 --ntasks-per-node=1 --cpus-per-task=32 --gres=gpu:a100:1 --mem=80G --time=04:00:00 --pty bash -i
