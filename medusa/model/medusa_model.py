@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from notebooks.medusa_introduction import prompt
+# from notebooks.medusa_introduction import prompt
 from .modeling_llama_kv import LlamaForCausalLM as KVLlamaForCausalLM
 from .modeling_mistral_kv import MistralForCausalLM as KVMistralForCausalLM
 # import transformers

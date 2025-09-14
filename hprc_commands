@@ -8,6 +8,7 @@ export TORCH_HOME="$TMPDIR/torch"
 export HF_HOME="$TMPDIR/huggingface"
 export PIP_CACHE_DIR="$SCRATCH/.cache/pip"
 export PIP_CACHE_DIR=$SCRATCH/.cache/pip
+
 python -m pip install -U pip setuptools wheel
 pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu126
 pip install "transformers>=4.34,<5.0" accelerate sentencepiece "protobuf>=3.20,<5.0" fschat
@@ -15,3 +16,15 @@ pip install "transformers>=4.34,<5.0" accelerate sentencepiece "protobuf>=3.20,<
 CUDA_VISIBLE_DEVICES=0 python -m medusa.inference.cli --model FasterDecoding/medusa-1.0-vicuna-7b-v1.5
 
 CUDA_VISIBLE_DEVICES=0 python -m medusa.inference.batch_cli --model FasterDecoding/medusa-1.0-vicuna-7b-v1.5 --input-file input.jsonl --output-file output.jsonl
+
+
+module load WebProxy GCC/12.3.0 OpenMPI/4.1.5 Python/3.11.3 PyTorch/2.1.2-CUDA-12.1.1 Transformers/4.39.3 accelerate/0.33.0-CUDA-12.1.1 SentencePiece/0.2.0
+
+print("Torch:", torch.__version__, "CUDA runtime:", torch.version.cuda, "CUDA available:", torch.cuda.is_available())
+
+pip install "protobuf>=3.20,<5.0" fschat
+
+# export TRANSFORMERS_CACHE=$SCRATCH/huggingface_cache
+
+export HF_HOME=$SCRATCH/huggingface_cache
+mkdir -p HF_HOME
