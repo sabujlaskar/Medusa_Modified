@@ -43,7 +43,7 @@ def main():
     ap.add_argument("--load-in-8bit", action="store_true", help="Use 8-bit quantization")
     ap.add_argument("--load-in-4bit", action="store_true", help="Use 4-bit quantization")
     ap.add_argument("--temperature", type=float, default=0.7)
-    ap.add_argument("--max-steps", type=int, default=512, help="Max generation steps (tokens) for Medusa")
+    ap.add_argument("--max-steps", type=int, default=2, help="Max generation steps (tokens) for Medusa")
     ap.add_argument("--conv-template", type=str, default=None, help="Override FastChat conversation template name")
     ap.add_argument("--conv-system-msg", type=str, default=None, help="Override system message")
     ap.add_argument("--print-separator", default="-"*60, help="Separator line printed between outputs")
@@ -93,6 +93,7 @@ def main():
 
         enc = tokenizer(full_prompt, return_tensors="pt")
         input_ids = enc["input_ids"].to(dev)
+        print("Input ids: " + str(input_ids))
 
         # Run Medusa generation (sequential, non-streaming)
         try:

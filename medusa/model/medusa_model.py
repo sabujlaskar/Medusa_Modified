@@ -1,5 +1,7 @@
 import torch
 import torch.nn as nn
+
+from notebooks.medusa_introduction import prompt
 from .modeling_llama_kv import LlamaForCausalLM as KVLlamaForCausalLM
 from .modeling_mistral_kv import MistralForCausalLM as KVMistralForCausalLM
 # import transformers
@@ -282,6 +284,8 @@ class MedusaModelABC(nn.Module):
             )
         self.medusa_buffers = medusa_buffers
         self.medusa_choices = medusa_choices
+        print("Medusa buffers: " + str(self.medusa_buffers))
+        print("Medusa choices: " + str(self.medusa_choices))
 
         # Initialize the past key and value states
         if hasattr(self, "past_key_values"):
@@ -300,6 +304,10 @@ class MedusaModelABC(nn.Module):
             self.past_key_values_data = past_key_values_data
             self.current_length_data = current_length_data
 
+        print("Past key values: " + str(past_key_values))
+        print("Past key values data: " + str(past_key_values_data))
+        print("Current length data: " + str(current_length_data))
+
         input_len = input_ids.shape[1]
 
         reset_medusa_mode(self)
@@ -308,10 +316,14 @@ class MedusaModelABC(nn.Module):
             input_ids, self, medusa_buffers["medusa_attn_mask"], past_key_values
         )
 
+        print("Medusa logits: " + str(medusa_logits))
+        print("Logits: " + str(logits))
+
         new_token = 0
         last_round_token = 0
 
         for idx in range(max_steps):
+            print("Step idx: " + str(idx))
             # Generate candidates with topk predictions from Medusa heads
             candidates, tree_candidates = generate_candidates(
                 medusa_logits,
@@ -326,6 +338,9 @@ class MedusaModelABC(nn.Module):
                 fast=fast,
             )
 
+            print("Candidates: " + str(candidates))
+            print("Tree candidates: " + str(tree_candidates))
+
             # Use tree attention to verify the candidates and get predictions
             medusa_logits, logits, outputs = tree_decoding(
                 self,
@@ -336,10 +351,17 @@ class MedusaModelABC(nn.Module):
                 medusa_buffers["retrieve_indices"],
             )
 
+            print("Medusa Logits in loop: " + str(medusa_logits))
+            print("Logits in loop: " + str(logits))
+            print("Outputs in loop: " + str(outputs))
+
             # Evaluate the posterior of the candidates to select the accepted candidate prefix
             best_candidate, accept_length = evaluate_posterior(
                 logits, candidates, temperature, posterior_threshold, posterior_alpha, top_p=top_p, sampling=sampling, fast=fast
             )
+
+            print("Best candidate in loop: " + str(best_candidate))
+            print("Accept length in loop: " + str(accept_length))
 
             # Update the input_ids and logits
             input_ids, logits, medusa_logits, new_token = update_inference_inputs(
@@ -355,6 +377,11 @@ class MedusaModelABC(nn.Module):
                 past_key_values_data,
                 current_length_data,
             )
+
+            print("Input_ids in loop 2: " + str(input_ids))
+            print("Logits in loop 2: " + str(logits))
+            print("Medusa Logits in loop 2: " + str(medusa_logits))
+            print("New token in loop 2: " + str(new_token))
 
             yield {
                 "text": self.tokenizer.decode(
