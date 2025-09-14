@@ -14,6 +14,8 @@ from fastchat.model.model_adapter import get_conversation_template
 from fastchat.conversation import get_conv_template
 from medusa.model.medusa_model import MedusaModel
 
+torch.set_printoptions(threshold=float('inf'))
+
 def _read_prompts_jsonl(path: str):
     with open(path, "r", encoding="utf-8") as f:
         for ln in f:

@@ -284,7 +284,10 @@ class MedusaModelABC(nn.Module):
             )
         self.medusa_buffers = medusa_buffers
         self.medusa_choices = medusa_choices
-        print("Medusa buffers: " + str(self.medusa_buffers))
+        print("Medusa buffers: medusa_attn_mask: " + str(self.medusa_buffers['medusa_attn_mask'].cpu()))
+        print("Medusa buffers: tree_indices: " + str(self.medusa_buffers['tree_indices'].cpu()))
+        print("Medusa buffers: medusa_position_ids: " + str(self.medusa_buffers['medusa_position_ids'].cpu()))
+        print("Medusa buffers: retrieve_indices: " + str(self.medusa_buffers['retrieve_indices'].cpu()))
         print("Medusa choices: " + str(self.medusa_choices))
 
         # Initialize the past key and value states
