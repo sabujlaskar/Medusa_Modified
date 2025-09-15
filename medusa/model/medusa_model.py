@@ -417,6 +417,7 @@ class MedusaModel():
         # Manually load config to ensure that the medusa_num_heads parameter is loaded
         try:
             config = AutoConfig.from_pretrained(pretrained_model_name_or_path)
+            print(config)
         except:
             # MEDUSA-v0.1 load
             config = MedusaConfig.from_pretrained(pretrained_model_name_or_path)
