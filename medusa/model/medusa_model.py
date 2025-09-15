@@ -319,8 +319,8 @@ class MedusaModelABC(nn.Module):
             input_ids, self, medusa_buffers["medusa_attn_mask"], past_key_values
         )
 
-        print("Medusa logits: " + str(medusa_logits))
-        print("Logits: " + str(logits))
+        print("Medusa logits: " + str(medusa_logits.shape))
+        print("Logits: " + str(logits.shape))
 
         new_token = 0
         last_round_token = 0
@@ -354,9 +354,9 @@ class MedusaModelABC(nn.Module):
                 medusa_buffers["retrieve_indices"],
             )
 
-            print("Medusa Logits in loop: " + str(medusa_logits))
-            print("Logits in loop: " + str(logits))
-            print("Outputs in loop: " + str(outputs))
+            print("Medusa Logits in loop: " + str(medusa_logits.shape))
+            print("Logits in loop: " + str(logits.shape))
+            print("Outputs in loop: " + str(outputs.shape))
 
             # Evaluate the posterior of the candidates to select the accepted candidate prefix
             best_candidate, accept_length = evaluate_posterior(
@@ -382,8 +382,8 @@ class MedusaModelABC(nn.Module):
             )
 
             print("Input_ids in loop 2: " + str(input_ids))
-            print("Logits in loop 2: " + str(logits))
-            print("Medusa Logits in loop 2: " + str(medusa_logits))
+            print("Logits in loop 2: " + str(logits.shape))
+            print("Medusa Logits in loop 2: " + str(medusa_logits.shape))
             print("New token in loop 2: " + str(new_token))
 
             yield {
